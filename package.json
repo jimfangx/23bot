@@ -1,0 +1,24 @@
+{
+  "name": "23bot",
+  "version": "1.0.0",
+  "description": "A custom discord bot built for the College Prep 2023 server.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AirFusion45/23bot.git"
+  },
+  "author": "AirFusion45",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AirFusion45/23bot/issues"
+  },
+  "homepage": "https://github.com/AirFusion45/23bot#readme",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "discord.js": "^12.5.1",
+    "nodemailer": "^6.4.17"
+  }
+}
