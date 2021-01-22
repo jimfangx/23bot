@@ -32,7 +32,7 @@ client.on('ready', ready => {
     console.log(chalk.green(`Logged in as: ${config.name} `));
     console.log(chalk.green(`Prefix: ${config.prefix}`));
     // console.log(chalk.green(`Ready to serve in ${client.channels} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`));
-    client.user.setActivity(`-help | DB8Bot | Version: ${pkg.version}`)
+    client.user.setActivity(`-verify | 23Bot | Version: ${pkg.version}`)
 
 });
 
