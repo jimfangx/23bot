@@ -1,4 +1,9 @@
-/** 
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Jim Fang. All rights reserved.
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+/**  Program Flow
 
 1. user joins
 2. either through a command or automatic prompting the bot asks for an email <@college-prep.org> (either through #unverified or DM)
@@ -26,8 +31,8 @@ const database = new MongoClient(uri, { useNewUrlParser: true });
 
 client.on('ready', ready => {
     console.log(chalk.green("|--------------------(Loading Complete)------------------------|"));
-    console.log(chalk.green(`DB8Bot is now online and ready to go! Here are some information:`));
-    console.log(chalk.green(`DB8Bot loaded successfully @ ${Date()}`));
+    console.log(chalk.green(`23Bot is now online and ready to go! Here are some information:`));
+    console.log(chalk.green(`23Bot loaded successfully @ ${Date()}`));
     console.log(chalk.green(`Owner: ${config.ownerTag}`));
     console.log(chalk.green(`Logged in as: ${config.name} `));
     console.log(chalk.green(`Prefix: ${config.prefix}`));
@@ -119,7 +124,7 @@ database.connect((err, dbClient) => {
                     })
                 }
                 else {
-                    msg.reply(`Please execute the \`-verify\` command followed by a space then followed by your CPS email. For questions, send a message in #helpline.`)
+                    msg.reply(`Please execute the \`-verify\` command followed by a space then followed by your CPS email. For questions, send a message in #helpline. For this bot's privacy policy, see: https://github.com/AirFusion45/23bot`)
                 }
             }
         }
