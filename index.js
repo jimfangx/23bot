@@ -124,7 +124,7 @@ database.connect((err, dbClient) => {
                     })
                 }
                 else {
-                    msg.reply(`Please execute the \`-verify\` command followed by a space then followed by your CPS email. For questions, send a message in #helpline. For this bot's privacy policy, see: https://github.com/AirFusion45/23bot`)
+                    msg.reply(`Please execute the \`-verify\` command followed by a space then followed by your CPS email. For questions, send a message in #helpline.`)
                 }
             }
         }
@@ -139,7 +139,7 @@ database.connect((err, dbClient) => {
 })
 
 client.on('guildMemberAdd', member => {
-    member.send(`Welcome to the CPS 23' Discord Server ${member.displayName}. Please execute \`-verify <your CPS email here>\` in the #unverified channel of the CPS 23' server to begin verification.`)
+    member.send(`Welcome to the CPS 23' Discord Server ${member.displayName}. Please execute \`-verify <your CPS email here>\` in the #unverified channel of the CPS 23' server to begin verification. For this bot's privacy policy, see: https://github.com/AirFusion45/23bot`)
 });
 
 var token = /[\w\d]{24}\.[\w\d]{6}\.[\w\d-_]{27}/g;
