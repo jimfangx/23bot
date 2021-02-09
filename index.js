@@ -135,6 +135,18 @@ database.connect((err, dbClient) => {
             });
         }
 
+        if (command === 'assembly') {
+            msg.channel.send(config.assembLink)
+        }
+
+        if (command === 'wdm') {
+            msg.channel.send(config.wdmLink)
+        }
+
+        if (command === 'ccsignup') {
+            msg.channel.send(config.ccSignup)
+        }
+
     });
 })
 
