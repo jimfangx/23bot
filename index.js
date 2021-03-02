@@ -118,6 +118,12 @@ database.connect((err, dbClient) => {
                             msg.reply(`Verification Successful!`)
                             msg.member.roles.add(msg.member.guild.roles.cache.find(role => role.name === 'Verified'))
                             msg.guild.channels.cache.get('748299448295096351').send(`<@${msg.author.id}>: ${res[0].email}`)
+                            // delete db entry
+                            var query = { _id: msg.author.id};
+                            collection.deleteOne(query, function(err,obj) {
+                                if (err) console.log(err)
+                                console.log('deleted')
+                            })
                         } else {
                             msg.reply(`Code is wrong, please try again. Message in #helpline if you have questions.`)
                         }
