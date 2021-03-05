@@ -76,7 +76,7 @@ database.connect((err, dbClient) => {
                                         from: '"CPS Class of 23 Verification Service" <cps23authentication@gmail.com>',
                                         to: args.join(' '),
                                         subject: "CPS '23 Discord Verification",
-                                        text: `Here is you verification code for the CPS '23 Discord. If you believe you have received this in error, plese contact yfang@college-prep.org. Your code is: ${code}\nTo get verified, enter this code into the -verify comomand. You can copy and paste this the following custom command to avoid typing.\n\n-verify ${code}`,
+                                        text: `Here is you verification code for the CPS '23 Discord. If you believe you have received this in error, plese contact yfang@college-prep.org. Your code is: ${code}\nTo get verified, enter this code into the -verify command. You can copy and paste this the following custom command to avoid typing.\n\n-verify ${code}`,
                                     });
                                     var dbInsertObject = {
                                         _id: msg.author.id,
@@ -101,7 +101,7 @@ database.connect((err, dbClient) => {
                                         from: '"CPS Class of 23 Verification Service" <cps23authentication@gmail.com>',
                                         to: args.join(' '),
                                         subject: "CPS '23 Discord Verification",
-                                        text: `Here is you verification code for the CPS '23 Discord. If you believe you have received this in error, plese contact yfang@college-prep.org. Your code is: ${code}\nTo get verified, enter this code into the -verify comomand. You can copy and paste this the following custom command to avoid typing.\n\n-verify ${code}`,
+                                        text: `Here is you verification code for the CPS '23 Discord. If you believe you have received this in error, plese contact yfang@college-prep.org. Your code is: ${code}\nTo get verified, enter this code into the -verify command. You can copy and paste this the following custom command to avoid typing.\n\n-verify ${code}`,
                                     });
                                 }
                             })
