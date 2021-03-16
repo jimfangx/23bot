@@ -14,12 +14,13 @@
 
 const Discord = require('discord.js')
 const client = new Discord.Client();
-const config = require('./config.json')
+let config = require('./config.json')
 const mailer = require('nodemailer')
 const chalk = require('chalk');
 const pkg = require("./package.json");
 const emails = require('./allowedEmails.json')
 const MongoClient = require('mongodb').MongoClient;
+const fs = require('fs')
 
 /**
 * Connection URI. Update <username>, <password>, and <your-cluster-url> to reflect your cluster.
@@ -119,8 +120,8 @@ database.connect((err, dbClient) => {
                             msg.member.roles.add(msg.member.guild.roles.cache.find(role => role.name === 'Verified'))
                             msg.guild.channels.cache.get('748299448295096351').send(`<@${msg.author.id}>: ${res[0].email}`)
                             // delete db entry
-                            var query = { _id: msg.author.id};
-                            collection.deleteOne(query, function(err,obj) {
+                            var query = { _id: msg.author.id };
+                            collection.deleteOne(query, function (err, obj) {
                                 if (err) console.log(err)
                                 console.log('deleted')
                             })
@@ -141,6 +142,69 @@ database.connect((err, dbClient) => {
             });
         }
 
+        if (command === 'restart23') {
+            if (msg.author.id === config.owner && args.join(' ') === "") {
+
+                msg.channel.send("Restarting...")
+
+                setTimeout(function () {
+                    process.abort();
+                }, 1000);
+            } else {
+                msg.channel.send(`e:CLIENT:401:AUTH-FAIL-OR-NO-AUTH`)
+            }
+        }
+
+        if (command === 'set') {
+            if (msg.author.id === config.owner) {
+                if (args.join(' ') != "") {
+                    switch (args[0]) {
+                        case "assembly":
+                            config.assembLink = args[1]
+                            fs.writeFile('./config.json', JSON.stringify(config), function (e) {
+                                if (e) msg.channel.send(`e:CLIENT:${e.code}:WRITE-FAIL`)
+                                delete require.cache[require.resolve('./config.json')]
+                                config = require("./config.json");
+                                msg.channel.send(`Assembly link written to: ${config.assembLink}`)
+                            })
+                            break;
+                        case "wdm":
+                            config.wdmLink = args[1]
+                            fs.writeFile('./config.json', JSON.stringify(config), function (e) {
+                                if (e) msg.channel.send(`e:CLIENT:${e.code}:WRITE-FAIL`)
+                                delete require.cache[require.resolve('./config.json')]
+                                config = require("./config.json");
+                                msg.channel.send(`WDM link written to: ${config.wdmLink}`)
+                            })
+                            break;
+                        case "ccsignup":
+                            config.ccSignup = args[1]
+                            fs.writeFile('./config.json', JSON.stringify(config), function (e) {
+                                if (e) msg.channel.send(`e:CLIENT:${e.code}:WRITE-FAIL`)
+                                delete require.cache[require.resolve('./config.json')]
+                                config = require("./config.json");
+                                msg.channel.send(`Common Classroom signup link written to: ${config.ccSignup}`)
+                            })
+                            break;
+                        case "cclinks":
+                            config.cclinks = args[1]
+                            fs.writeFile('./config.json', JSON.stringify(config), function (e) {
+                                if (e) msg.channel.send(`e:CLIENT:${e.code}:WRITE-FAIL`)
+                                delete require.cache[require.resolve('./config.json')]
+                                config = require("./config.json");
+                                msg.channel.send(`Common Classroom Zoom links link written to: ${config.cclinks}`)
+                            })
+                    }
+                } else {
+                    msg.channel.send(`e:CLIENT:204:NO-ARG`)
+                    msg.reply(`assembly|wdm|ccsignup|cclinks`)
+                }
+            } else {
+                msg.channel.send(`e:CLIENT:401:AUTH-FAIL-OR-NO-AUTH`)
+            }
+
+        }
+
         if (command === 'assembly') {
             msg.channel.send(config.assembLink)
         }
@@ -151,6 +215,10 @@ database.connect((err, dbClient) => {
 
         if (command === 'ccsignup') {
             msg.channel.send(config.ccSignup)
+        }
+
+        if (command === 'cclinks') {
+            msg.channel.send(config.cclinks)
         }
 
     });
