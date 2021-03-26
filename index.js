@@ -21,6 +21,8 @@ const pkg = require("./package.json");
 const emails = require('./allowedEmails.json')
 const MongoClient = require('mongodb').MongoClient;
 const fs = require('fs')
+const superagent = require('superagent')
+const cheerio = require('cheerio')
 
 /**
 * Connection URI. Update <username>, <password>, and <your-cluster-url> to reflect your cluster.
@@ -194,6 +196,15 @@ database.connect((err, dbClient) => {
                                 config = require("./config.json");
                                 msg.channel.send(`Common Classroom Zoom links link written to: ${config.cclinks}`)
                             })
+                            break;
+                        case "freesignup":
+                            config.args[1] = args[2]
+                            fs.writeFile('./config.json', JSON.stringify(config), function (e) {
+                                if (e) msg.channel.send(`e:CLIENT:${e.code}:WRITE-FAIL`)
+                                delete require.cache[require.resolve('./config.json')]
+                                config = require("./config.json");
+                                msg.channel.send(`Free Signup ${args[1]} written to: ${config.args[1]}`)
+                            })
                     }
                 } else {
                     msg.channel.send(`e:CLIENT:204:NO-ARG`)
@@ -213,12 +224,42 @@ database.connect((err, dbClient) => {
             msg.channel.send(config.wdmLink)
         }
 
-        if (command === 'ccsignup') {
+        if (command === 'ccsignup' || command === 'cc') {
             msg.channel.send(config.ccSignup)
         }
 
         if (command === 'cclinks') {
             msg.channel.send(config.cclinks)
+        }
+
+        if (command === 'freesignup' || command === 'free') {
+            if (args.join(' ') === '') {
+                var today = new Date().getDay()
+                switch (today) {
+                    case 1:
+                        msg.channel.send(`M Schedule Signup: ${config.m}`)
+                        break;
+                    case 2:
+                        msg.channel.send(`T Schedule Signup: ${config.t}`)
+                        break;
+                    case 4:
+                        msg.channel.send(`R Schedule Signup: ${config.r}`)
+                        break;
+                    case 5:
+                        msg.channel.send(`F Schedule Signup: ${config.f}`)
+                        break;
+                }
+            } else {
+                if (args.join(' ').toLowerCase() === 'm' || args.join(' ').toLowerCase().includes('mon')) {
+                    msg.channel.send(`M Schedule Signup: ${config.m}`)
+                } else if (args.join(' ').toLowerCase() === 't' || args.join(' ').toLowerCase().includes('tue')) {
+                    msg.channel.send(`T Schedule Signup: ${config.t}`)
+                } else if (args.join(' ').toLowerCase() === 'r' || args.join(' ').toLowerCase().includes('thu')) {
+                    msg.channel.send(`R Schedule Signup: ${config.r}`)
+                } else if (args.join(' ').toLowerCase() === 'f' || args.join(' ').toLowerCase().includes('fri')) {
+                    msg.channel.send(`F Schedule Signup: ${config.f}`)
+                }
+            }
         }
 
     });
