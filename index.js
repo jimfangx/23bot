@@ -198,17 +198,37 @@ database.connect((err, dbClient) => {
                             })
                             break;
                         case "freesignup":
-                            config.args[1] = args[2]
+                            config[args[1]] = args[2]
                             fs.writeFile('./config.json', JSON.stringify(config), function (e) {
                                 if (e) msg.channel.send(`e:CLIENT:${e.code}:WRITE-FAIL`)
                                 delete require.cache[require.resolve('./config.json')]
                                 config = require("./config.json");
-                                msg.channel.send(`Free Signup ${args[1]} written to: ${config.args[1]}`)
+                                msg.channel.send(`Free Signup ${args[1]} written to: ${config[args[1]]}`)
                             })
+                            break;
+                        case "variablelink":
+                            config.variableLink = args[1]
+                            fs.writeFile('./config.json', JSON.stringify(config), function (e) {
+                                if (e) msg.channel.send(`e:CLIENT:${e.code}:WRITE-FAIL`)
+                                delete require.cache[require.resolve('./config.json')]
+                                config = require("./config.json");
+                                msg.channel.send(`Link written to: ${config.variableLink}`)
+                            })
+                            break;
+                        case "variabledesc":
+                            args.splice(0, 1)
+                            config.variableDesc = args.join(' ')
+                            fs.writeFile('./config.json', JSON.stringify(config), function (e) {
+                                if (e) msg.channel.send(`e:CLIENT:${e.code}:WRITE-FAIL`)
+                                delete require.cache[require.resolve('./config.json')]
+                                config = require("./config.json");
+                                msg.channel.send(`Link written to: ${config.variableDesc}`)
+                            })
+                            break;
                     }
                 } else {
                     msg.channel.send(`e:CLIENT:204:NO-ARG`)
-                    msg.reply(`assembly|wdm|ccsignup|cclinks`)
+                    msg.reply(`assembly|wdm|ccsignup|cclinks|freesignup|variablelink|variabledesc`)
                 }
             } else {
                 msg.channel.send(`e:CLIENT:401:AUTH-FAIL-OR-NO-AUTH`)
@@ -260,6 +280,10 @@ database.connect((err, dbClient) => {
                     msg.channel.send(`F Schedule Signup: ${config.f}`)
                 }
             }
+        }
+
+        if (command === 'link') {
+            msg.channel.send(`:warning: This is a variable link for special events.\nEvent Description: **${config.variableDesc}**\nLink: ${config.variableLink}`)
         }
 
     });
