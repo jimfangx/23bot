@@ -21,8 +21,7 @@ const pkg = require("./package.json");
 const emails = require('./allowedEmails.json')
 const MongoClient = require('mongodb').MongoClient;
 const fs = require('fs')
-const superagent = require('superagent')
-const cheerio = require('cheerio')
+var { DateTime } = require('luxon')
 
 /**
 * Connection URI. Update <username>, <password>, and <your-cluster-url> to reflect your cluster.
@@ -254,7 +253,7 @@ database.connect((err, dbClient) => {
 
         if (command === 'freesignup' || command === 'free') {
             if (args.join(' ') === '') {
-                var today = new Date().getDay()
+                var today = DateTime.now().setZone('America/Los_Angeles').weekday
                 switch (today) {
                     case 1:
                         msg.channel.send(`M Schedule Signup: ${config.m}`)
