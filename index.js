@@ -170,7 +170,8 @@ database.connect((err, dbClient) => {
                             })
                             break;
                         case "wdm":
-                            config.wdmLink = args[1]
+                            args.splice(0, 1)
+                            config.wdmLink = args.join(' ')
                             fs.writeFile('./config.json', JSON.stringify(config), function (e) {
                                 if (e) msg.channel.send(`e:CLIENT:${e.code}:WRITE-FAIL`)
                                 delete require.cache[require.resolve('./config.json')]
