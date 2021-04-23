@@ -143,6 +143,30 @@ database.connect((err, dbClient) => {
             });
         }
 
+        if (command === 'help') {
+            function getRandomIntInclusive(min, max) {
+                min = Math.ceil(min);
+                max = Math.floor(max);
+                return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
+            }
+            let helpEmbed = new Discord.MessageEmbed()
+                .setColor(getRandomIntInclusive(1, 3) === 1 ? "#ccff00" : getRandomIntInclusive(1, 3) === 2 ? "#0072bb" : getRandomIntInclusive(1, 3) === 3 ? "#ff4f00" : "#ccff00")
+                .setTitle("23Bot Help\n")
+                .addField('Prefix', '`-`, not `~`!')
+                .addField('verify', '-verify <CPS email> OR -verify <Verification Code>')
+                .addField('ping', '-ping')
+                .addField('help', '-help')
+                .addField('Assembly Link', '-assembly')
+                .addField('WDM Link', '-wdm')
+                .addField('Sign up for Common Classroom', '-ccsignup OR -cc')
+                .addField('Common Classroom Zoom Links', '-cclinks')
+                .addField('Free Period Spaces Signup', `-free (gets today's sheet) OR -free <M/T/R/F> (for specific sheet)`)
+                .addField('Special Events (Event description & Zoom link)', `-link`)
+                .addField('set [OWNER ONLY]', '-set')
+                .addField('restart23 [OWNER ONLY]', '-restart23')
+            msg.channel.send({embed: helpEmbed})
+        }
+
         if (command === 'restart23') {
             if (msg.author.id === config.owner && args.join(' ') === "") {
 
@@ -228,7 +252,7 @@ database.connect((err, dbClient) => {
                     }
                 } else {
                     msg.channel.send(`e:CLIENT:204:NO-ARG`)
-                    msg.reply(`assembly|wdm|ccsignup|cclinks|freesignup|variablelink|variabledesc`)
+                    msg.reply(`assembly|wdm (supports spaces)|ccsignup|cclinks|freesignup (<schedule letter> <link>)|variablelink|variabledesc (supports spaces)`)
                 }
             } else {
                 msg.channel.send(`e:CLIENT:401:AUTH-FAIL-OR-NO-AUTH`)
