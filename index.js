@@ -45,6 +45,7 @@ client.on('ready', ready => {
 
 database.connect((err, dbClient) => {
     const collection = dbClient.db("23bot").collection("authUsers")
+    const quoteCollection = dbClient.db('23bot').collection("quotes")
 
 
     client.on('message', async msg => {
@@ -164,7 +165,7 @@ database.connect((err, dbClient) => {
                 .addField('Special Events (Event description & Zoom link)', `-link`)
                 .addField('set [OWNER ONLY]', '-set')
                 .addField('restart23 [OWNER ONLY]', '-restart23')
-            msg.channel.send({embed: helpEmbed})
+            msg.channel.send({ embed: helpEmbed })
         }
 
         if (command === 'restart23') {
@@ -309,6 +310,31 @@ database.connect((err, dbClient) => {
         if (command === 'link') {
             msg.channel.send(`:warning: This is a variable link for special events.\nEvent Description: **${config.variableDesc}**\nLink: ${config.variableLink}`)
         }
+
+        if (command === 'pin') {
+            var msgID = args.join(' ').split('/')
+            msgID = msgID[msgID.length - 1]
+            console.log(msgID)
+            msg.channel.messages.fetch(msgID).then(message => {
+                var attachmentLink 
+                if (message.attachments.size > 0) {
+                    attachmentLink = message.attachments.first().url
+                }
+                var dbInsertObject = {
+                    _id: msg.author.id,
+                    content: message.content,
+                    attachment: attachmentLink,
+                    author: message.author.username+message.author.discriminator,
+                    timestamp: message.createdTimestamp
+                }
+                quoteCollection.insertOne(dbInsertObject, function (err, res) {
+                    if (err) throw err;
+                    console.log("1 document inserted");
+                })
+            })
+        }
+
+        // cmd === quote
 
     });
 })
