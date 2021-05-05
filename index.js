@@ -314,27 +314,65 @@ database.connect((err, dbClient) => {
         if (command === 'pin') {
             var msgID = args.join(' ').split('/')
             msgID = msgID[msgID.length - 1]
+            var channelID = args.join(' ').split('/')
+            channelID = channelID[channelID.length - 2]
             console.log(msgID)
-            msg.channel.messages.fetch(msgID).then(message => {
-                var attachmentLink 
-                if (message.attachments.size > 0) {
-                    attachmentLink = message.attachments.first().url
-                }
-                var dbInsertObject = {
-                    _id: msg.author.id,
-                    content: message.content,
-                    attachment: attachmentLink,
-                    author: message.author.username+message.author.discriminator,
-                    timestamp: message.createdTimestamp
-                }
-                quoteCollection.insertOne(dbInsertObject, function (err, res) {
-                    if (err) throw err;
-                    console.log("1 document inserted");
+            console.log(channelID)
+
+            client.channels.fetch(channelID).then(channel => {
+                channel.messages.fetch(msgID).then(message => {
+                    var attachmentLink
+                    if (message.attachments.size > 0) {
+                        attachmentLink = message.attachments.first().url
+                    }
+                    var dbInsertObject = {
+                        id: message.author.id,
+                        content: message.content,
+                        attachment: attachmentLink,
+                        author: message.author.username + "#" + message.author.discriminator,
+                        timestamp: message.createdTimestamp
+                    }
+                    quoteCollection.insertOne(dbInsertObject, function (err, res) {
+                        if (err) throw err;
+                        console.log("1 document inserted");
+                        msg.channel.send(':pushpin: Pinned')
+                    })
                 })
             })
         }
 
-        // cmd === quote
+        if (command === 'quote') {
+            function getRandomIntInclusive(min, max) {
+                min = Math.ceil(min);
+                max = Math.floor(max);
+                return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
+            }
+            var lookupID = ""
+
+            if (!isNaN(args.join(' '))) { // its an user id - look up by userid
+                lookupID = args.join(' ')
+            } else {
+                var mention = msg.guild.member(msg.mentions.users.first())
+                lookupID = "" + mention.id
+            }
+            console.log(lookupID)
+            if (lookupID === "") return
+            quoteCollection.find({ id: lookupID }).toArray(async function (err, res) {
+                console.log(res.length)
+                var selectedQuote = res[getRandomIntInclusive(0, res.length - 1)]
+                var sendEmbed = new Discord.MessageEmbed()
+                    .setColor("#f0ffff")
+                    .setTitle(`Quote by ${selectedQuote.author}`)
+                    .setDescription(selectedQuote.content)
+                    .setTimestamp(selectedQuote.timstamp)
+
+                if (selectedQuote.attachment != null) {
+                    sendEmbed.setImage(selectedQuote.attachment)
+                }
+                msg.channel.send({ embed: sendEmbed })
+            })
+
+        }
 
     });
 })
