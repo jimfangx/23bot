@@ -1,6 +1,6 @@
 {
   "name": "23bot",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A custom discord bot built for the College Prep 2023 server.",
   "main": "index.js",
   "scripts": {
@@ -17,9 +17,11 @@
   },
   "homepage": "https://github.com/AirFusion45/23bot#readme",
   "dependencies": {
+    "@discordjs/builders": "^0.5.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
     "chalk": "^4.1.0",
-    "cheerio": "*",
-    "discord.js": "^12.5.1",
+    "discord-api-types": "^0.22.0",
+    "discord.js": "^13.1.0",
     "luxon": "^1.26.0",
     "mongodb": "^3.6.3",
     "nodemailer": "^6.4.17",
