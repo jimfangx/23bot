@@ -38,7 +38,7 @@ module.exports = {
                                     from: '"CPS Class of 23 Verification Service" <cps23authentication@gmail.com>',
                                     to: args,
                                     subject: "CPS '23 Discord Verification",
-                                    text: `Here is you verification code for the CPS '23 Discord. If you believe you have received this in error, plese contact yfang@college-prep.org. Your code is: ${code}\nTo get verified, enter this code into the /verify command. You can copy and paste this the following custom command to avoid typing.\n\n-verify ${code}`,
+                                    text: `Here is you verification code for the CPS '23 Discord. If you believe you have received this in error, plese contact yfang@college-prep.org. Your code is: ${code}\nTo get verified, enter this code into the /verify command. You can copy and paste this the following custom command to avoid typing.\n\n/verify ${code}`,
                                 });
                                 var dbInsertObject = {
                                     _id: interaction.user.id,
@@ -63,35 +63,42 @@ module.exports = {
                                     from: '"CPS Class of 23 Verification Service" <cps23authentication@gmail.com>',
                                     to: args,
                                     subject: "CPS '23 Discord Verification",
-                                    text: `Here is you verification code for the CPS '23 Discord. If you believe you have received this in error, plese contact yfang@college-prep.org. Your code is: ${code}\nTo get verified, enter this code into the -verify command. You can copy and paste this the following custom command to avoid typing.\n\n-verify ${code}`,
+                                    text: `Here is you verification code for the CPS '23 Discord. If you believe you have received this in error, plese contact yfang@college-prep.org. Your code is: ${res[0].code}\nTo get verified, enter this code into the /verify command. You can copy and paste this the following custom command to avoid typing.\n\n/verify ${res[0].code}`,
                                 });
+                                interaction.reply({ content: `Verification code has been sent to the email provided. Go check your inbox. Make sure to check your spam folders if you don't receive the message!`, ephemeral: true })
                             }
                         })
                     } else {
-                        interaction.reply({ content: `Please execute the \`-verify\` command followed by a space then followed by your CPS 23 email. For questions, send a message in #helpline.`, ephemeral: true })
+                        interaction.reply({ content: `Please execute the \`/verify\` command followed by a space then followed by your CPS 23 email. For questions, send a message in #helpline.`, ephemeral: true })
                     }
                 } else {
-                    interaction.reply({ content: `Please execute the \`-verify\` command followed by a space then followed by your CPS email. For questions, send a message in #helpline.`, ephemeral: true })
+                    interaction.reply({ content: `Please execute the \`/verify\` command followed by a space then followed by your CPS email. For questions, send a message in #helpline.`, ephemeral: true })
                 }
             } else if (args.trim().length === 6 && /^\d+$/.test(args.trim())) {
                 collection.find({ _id: interaction.user.id }).toArray(async function (err, res) {
-                    if (args.trim() == res[0].code) { // verification successful
-                        interaction.reply({ content: `Verification Successful!`, ephemeral: true })
-                        interaction.guild.members.fetch(interaction.user.id).then(member => {
-                            member.roles.add(interaction.guild.roles.cache.find(role => role.name === 'Verified'))
-                        })
-                        interaction.guild.channels.cache.get('748299448295096351').send(`<@${interaction.user.id}>: ${res[0].email}`)
+                    try {
+                        if (args.trim() == res[0].code) { // verification successful
+                            interaction.reply({ content: `Verification Successful!`, ephemeral: true })
+                            interaction.guild.members.fetch(interaction.user.id).then(member => {
+                                member.roles.add(interaction.guild.roles.cache.find(role => role.name === 'Verified'))
+                            })
+                            interaction.guild.channels.cache.get('748299448295096351').send(`<@${interaction.user.id}>: ${res[0].email}`)
 
-                        // delete db entry
-                        var query = { _id: interaction.user.id };
-                        collection.deleteOne(query, function (err, obj) {
-                            if (err) console.log(err)
-                            console.log('deleted')
-                        })
-                    } else {
-                        interaction.reply({ content: `Code is wrong, please try again. Message in #helpline if you have questions.`, ephemeral: true })
+                            // delete db entry
+                            var query = { _id: interaction.user.id };
+                            collection.deleteOne(query, function (err, obj) {
+                                if (err) console.log(err)
+                                console.log('deleted')
+                            })
+                        } else {
+                            interaction.reply({ content: `Code is wrong, please try again. Message in #helpline if you have questions.`, ephemeral: true })
+                        }
+                    } catch (err) {
+                        interaction.reply({ content: `Code does not exist! Try requesting a new code using \`/verify\``, ephemeral: true })
                     }
                 })
+            } else {
+                interaction.reply({ content: `Please execute the \`/verify\` command followed by a space then followed by your CPS email. For questions, send a message in #helpline.`, ephemeral: true })
             }
         })
     },

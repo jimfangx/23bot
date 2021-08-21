@@ -58,7 +58,7 @@ client.on('ready', () => {
     console.log(chalk.green(`Owner: ${config.ownerTag}`));
     console.log(chalk.green(`Logged in as: ${config.name} `));
     console.log(chalk.green(`Prefix: ${config.prefix}`));
-    client.user.setActivity(`-verify | 23Bot | Version: ${pkg.version}`)
+    client.user.setActivity(`/verify | 23Bot | Version: ${pkg.version}`)
 })
 
 client.on('interactionCreate', async interaction => {
