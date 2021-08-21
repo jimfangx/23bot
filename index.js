@@ -3,7 +3,7 @@ const chalk = require('chalk')
 const pkg = require('./package.json')
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
-const config = require('./config.json')
+var config = require('./config.json')
 const fs = require('fs');
 
 const client = new Client({
@@ -73,4 +73,117 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
+client.on('guildMemberAdd', member => {
+    member.send(`Welcome to the CPS 23' Discord Server ${member.displayName}. Please execute \`/verify <your CPS email here>\` in the #unverified channel of the CPS 23' server to begin verification. For this bot's privacy policy, see: https://github.com/AirFusion45/23bot`)
+});
+
+client.on('messageCreate', (msg) => {
+    const args = msg.content.slice(config.prefix.length).trim().split(/ +/g);
+    const command = args.shift().toLowerCase();
+    if (!msg.content.startsWith(config.prefix) || msg.author.bot) return;
+    if (msg.content.indexOf(config.prefix) !== 0) return;
+
+    if (command === 'set') {
+        if (msg.author.id === config.owner) {
+            if (args.join(' ') != "") {
+                switch (args[0]) {
+                    case "assembly":
+                        config.assembLink = args[1]
+                        fs.writeFile('./config.json', JSON.stringify(config), function (e) {
+                            if (e) msg.channel.send(`e:CLIENT:${e.code}:WRITE-FAIL`)
+                            delete require.cache[require.resolve('./config.json')]
+                            config = require("./config.json");
+                            msg.channel.send(`Assembly link written to: ${config.assembLink}`)
+                        })
+                        break;
+                    case "wdm":
+                        args.splice(0, 1)
+                        config.wdmLink = args.join(' ')
+                        fs.writeFile('./config.json', JSON.stringify(config), function (e) {
+                            if (e) msg.channel.send(`e:CLIENT:${e.code}:WRITE-FAIL`)
+                            delete require.cache[require.resolve('./config.json')]
+                            config = require("./config.json");
+                            msg.channel.send(`WDM link written to: ${config.wdmLink}`)
+                        })
+                        break;
+                    case "ccsignup":
+                        config.ccSignup = args[1]
+                        fs.writeFile('./config.json', JSON.stringify(config), function (e) {
+                            if (e) msg.channel.send(`e:CLIENT:${e.code}:WRITE-FAIL`)
+                            delete require.cache[require.resolve('./config.json')]
+                            config = require("./config.json");
+                            msg.channel.send(`Common Classroom signup link written to: ${config.ccSignup}`)
+                        })
+                        break;
+                    case "cclinks":
+                        config.cclinks = args[1]
+                        fs.writeFile('./config.json', JSON.stringify(config), function (e) {
+                            if (e) msg.channel.send(`e:CLIENT:${e.code}:WRITE-FAIL`)
+                            delete require.cache[require.resolve('./config.json')]
+                            config = require("./config.json");
+                            msg.channel.send(`Common Classroom Zoom links link written to: ${config.cclinks}`)
+                        })
+                        break;
+                    case "freesignup":
+                        config[args[1]] = args[2]
+                        fs.writeFile('./config.json', JSON.stringify(config), function (e) {
+                            if (e) msg.channel.send(`e:CLIENT:${e.code}:WRITE-FAIL`)
+                            delete require.cache[require.resolve('./config.json')]
+                            config = require("./config.json");
+                            msg.channel.send(`Free Signup ${args[1]} written to: ${config[args[1]]}`)
+                        })
+                        break;
+                    case "variablelink":
+                        config.variableLink = args[1]
+                        fs.writeFile('./config.json', JSON.stringify(config), function (e) {
+                            if (e) msg.channel.send(`e:CLIENT:${e.code}:WRITE-FAIL`)
+                            delete require.cache[require.resolve('./config.json')]
+                            config = require("./config.json");
+                            msg.channel.send(`Link written to: ${config.variableLink}`)
+                        })
+                        break;
+                    case "variabledesc":
+                        args.splice(0, 1)
+                        config.variableDesc = args.join(' ')
+                        fs.writeFile('./config.json', JSON.stringify(config), function (e) {
+                            if (e) msg.channel.send(`e:CLIENT:${e.code}:WRITE-FAIL`)
+                            delete require.cache[require.resolve('./config.json')]
+                            config = require("./config.json");
+                            msg.channel.send(`Link written to: ${config.variableDesc}`)
+                        })
+                        break;
+                }
+            } else {
+                msg.channel.send(`e:CLIENT:204:NO-ARG`)
+                msg.reply(`assembly|wdm (supports spaces)|ccsignup|cclinks|freesignup (<schedule letter> <link>)|variablelink|variabledesc (supports spaces)`)
+            }
+        } else {
+            msg.channel.send(`e:CLIENT:401:AUTH-FAIL-OR-NO-AUTH`)
+        }
+
+    }
+    if (command === 'restart23') {
+        if (msg.author.id === config.owner && args.join(' ') === "") {
+
+            msg.channel.send("Restarting...")
+
+            setTimeout(function () {
+                process.abort();
+            }, 1000);
+        } else {
+            msg.channel.send(`e:CLIENT:401:AUTH-FAIL-OR-NO-AUTH`)
+        }
+    }
+})
+
+var token = /[\w\d]{24}\.[\w\d]{6}\.[\w\d-_]{27}/g;
+client.on("debug", error => {
+    console.log(chalk.cyan(error.replace(token, "HIDDEN")));
+});
+client.on("warn", error => {
+    console.log(chalk.yellow(error.replace(token, "HIDDEN")));
+});
+client.on("error", (error) => {
+    console.error(chalk.red(error.replace(token, "HIDDEN")));
+});
 client.login(config.token)

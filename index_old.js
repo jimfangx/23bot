@@ -154,17 +154,17 @@ database.connect((err, dbClient) => {
                 .setColor(getRandomIntInclusive(1, 3) === 1 ? "#ccff00" : getRandomIntInclusive(1, 3) === 2 ? "#0072bb" : getRandomIntInclusive(1, 3) === 3 ? "#ff4f00" : "#ccff00")
                 .setTitle("23Bot Help\n")
                 .addField('Prefix', '`-`, not `~`!')
-                .addField('verify', '-verify <CPS email> OR -verify <Verification Code>')
-                .addField('ping', '-ping')
-                .addField('help', '-help')
+                .addField('verify', '-verify <CPS email> OR -verify <Verification Code>') // done
+                .addField('ping', '-ping') // done
+                .addField('help', '-help') // in progress
                 .addField('Assembly Link', '-assembly')
-                .addField('WDM Link', '-wdm')
-                .addField('Sign up for Common Classroom', '-ccsignup OR -cc')
-                .addField('Common Classroom Zoom Links', '-cclinks')
-                .addField('Free Period Spaces Signup', `-free (gets today's sheet) OR -free <M/T/R/F> (for specific sheet)`)
-                .addField('Special Events (Event description & Zoom link)', `-link`)
-                .addField('set [OWNER ONLY]', '-set')
-                .addField('restart23 [OWNER ONLY]', '-restart23')
+                .addField('WDM Link', '-wdm') // wont fix
+                .addField('Sign up for Common Classroom', '-ccsignup OR -cc') // todo
+                .addField('Common Classroom Zoom Links', '-cclinks') // wontfix
+                .addField('Free Period Spaces Signup', `-free (gets today's sheet) OR -free <M/T/R/F> (for specific sheet)`) // wontfix
+                .addField('Special Events (Event description & Zoom link)', `-link`) // todo
+                .addField('set [OWNER ONLY]', '-set') // todo
+                .addField('restart23 [OWNER ONLY]', '-restart23') // todo
             msg.channel.send({ embed: helpEmbed })
         }
 
