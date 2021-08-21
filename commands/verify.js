@@ -1,3 +1,4 @@
+// enable less secure apps & https://accounts.google.com/b/0/DisplayUnlockCaptcha (https://stackoverflow.com/questions/51980436/nodemailer-throws-error-invalid-login-534-5-7-14)
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const emails = require('../allowedEmails.json')
 const MongoClient = require('mongodb').MongoClient;
