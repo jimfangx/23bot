@@ -2,8 +2,10 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const emails = require('../allowedEmails.json')
 const MongoClient = require('mongodb').MongoClient;
-const mailer = require('nodemailer')
+// const mailer = require('nodemailer')
 const config = require('../config.json')
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(config.sendgridAPI)
 const uri = `mongodb+srv://${config.dbUser}:${config.dbPass}@23botcluster.ao4me.mongodb.net/23bot?retryWrites=true&w=majority`;
 const database = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 module.exports = {
@@ -26,21 +28,22 @@ module.exports = {
                             if (res.length === 0) { // no records for this person - send email & generate code
                                 let code = Math.floor(100000 + Math.random() * 900000)
                                 interaction.reply({ content: `Verification code has been sent to the email provided. Go check your inbox. Make sure to check your spam folders if you don't receive the message!`, ephemeral: true })
-                                let transporter = mailer.createTransport({
-                                    host: "smtp.gmail.com",
-                                    port: 465,
-                                    secure: true,
-                                    auth: {
-                                        user: config.transportUser,
-                                        pass: config.transportPass,
-                                    },
-                                });
-                                await transporter.sendMail({
-                                    from: '"CPS Class of 23 Verification Service" <cps23authentication@gmail.com>',
+
+                                const msg = {
                                     to: args,
-                                    subject: "CPS '23 Discord Verification",
-                                    text: `Here is you verification code for the CPS '23 Discord. If you believe you have received this in error, plese contact yfang@college-prep.org. Your code is: ${code}\nTo get verified, enter this code into the /verify command. You can copy and paste this the following custom command to avoid typing.\n\n/verify ${code}`,
-                                });
+                                    from: 'cps23authentication@airfusion.dev', // Change to your verified sender
+                                    subject: `CPS '23 Discord Verification`,
+                                    text: `Here is you verification code for the CPS '23 Discord. If you believe you have received this in error, plese contact yfang@college-prep.org. Your code is: ${code}\nTo get verified, enter this code into the /verify command. You can copy and paste this the following custom command to avoid typing.\n\n/verify ${code}`
+                                }
+                                sgMail
+                                    .send(msg)
+                                    .then(() => {
+                                        console.log('Email sent')
+                                    })
+                                    .catch((error) => {
+                                        console.error(error)
+                                    })
+
                                 var dbInsertObject = {
                                     _id: interaction.user.id,
                                     code: code,
@@ -51,21 +54,20 @@ module.exports = {
                                     console.log("1 document inserted");
                                 })
                             } else { // records exist for this person - send email (args) w/ existing code
-                                let transporter = mailer.createTransport({
-                                    host: "smtp.gmail.com",
-                                    port: 465,
-                                    secure: true,
-                                    auth: {
-                                        user: config.transportUser,
-                                        pass: config.transportPass,
-                                    },
-                                });
-                                await transporter.sendMail({
-                                    from: '"CPS Class of 23 Verification Service" <cps23authentication@gmail.com>',
+                                const msg = {
                                     to: args,
-                                    subject: "CPS '23 Discord Verification",
-                                    text: `Here is you verification code for the CPS '23 Discord. If you believe you have received this in error, plese contact yfang@college-prep.org. Your code is: ${res[0].code}\nTo get verified, enter this code into the /verify command. You can copy and paste this the following custom command to avoid typing.\n\n/verify ${res[0].code}`,
-                                });
+                                    from: 'cps23authentication@airfusion.dev', // Change to your verified sender
+                                    subject: `CPS '23 Discord Verification`,
+                                    text: `Here is you verification code for the CPS '23 Discord. If you believe you have received this in error, plese contact yfang@college-prep.org. Your code is: ${res[0].code}\nTo get verified, enter this code into the /verify command. You can copy and paste this the following custom command to avoid typing.\n\n/verify ${res[0].code}`
+                                }
+                                sgMail
+                                    .send(msg)
+                                    .then(() => {
+                                        console.log('Email sent')
+                                    })
+                                    .catch((error) => {
+                                        console.error(error)
+                                    })
                                 interaction.reply({ content: `Verification code has been sent to the email provided. Go check your inbox. Make sure to check your spam folders if you don't receive the message!`, ephemeral: true })
                             }
                         })
