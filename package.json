@@ -1,6 +1,6 @@
 {
   "name": "23bot",
-  "version": "2.1.0",
+  "version": "2.1.2",
   "description": "A custom discord bot built for the College Prep 2023 server.",
   "main": "index.js",
   "scripts": {
