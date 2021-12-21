@@ -6,3 +6,5 @@ config.json
 data/
 
 allowedEmails.json
+
+.DS_Store
