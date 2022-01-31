@@ -6,3 +6,5 @@ node_modules/
 data/
 
 # allowedEmails.json
+
+.DS_Store
