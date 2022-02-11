@@ -57,7 +57,7 @@ This Project is licensed under MIT License - see the LICENSE.md file for more de
 * [Chalk](https://github.com/chalk/chalk#readme)
 * [Discord.js](https://discord.js.org)
 * [MongoDB](https://github.com/mongodb/node-mongodb-native)
-* [Nodemailer](https://nodemailer.com/)
+* [Sendgrid Node.js API](https://github.com/sendgrid/sendgrid-nodejs)
 
 ## Contact Me
 Feel free to contact me if you find bugs, license issues, missing credits, etc.
